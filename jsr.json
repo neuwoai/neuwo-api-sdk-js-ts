@@ -1,0 +1,10 @@
+{
+  "name": "@neuwo/neuwo-api",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./dist/esm/index.d.ts"
+  },
+  "publish": {
+    "include": ["dist/", "README.md", "LICENCE"]
+  }
+}

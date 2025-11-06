@@ -1,0 +1,40 @@
+# Source files
+src/
+tests/
+examples/
+
+# Ad hoc testing files
+adhoc*
+
+# Config files
+tsconfig*.json
+.gitignore
+.git
+
+# CI/CD
+.github/
+
+# Development
+node_modules/
+*.log
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.cache/
+
+# Build artifacts (keep dist/)
+*.tsbuildinfo
+
+# Documentation (keep README.md)
+CONTRIBUTING.md
+
+# Testing
+coverage/
