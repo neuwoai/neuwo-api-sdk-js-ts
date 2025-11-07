@@ -119,32 +119,6 @@ export interface EdgeGetAiTopicsWaitParams {
 }
 
 /**
- * Parameters for getAiTopicsList EDGE endpoint.
- */
-export interface EdgeGetAiTopicsListParams {
-    /** List of URLs or file content as bytes */
-    urls: string[] | ArrayBuffer;
-    /** Origin header for the request */
-    origin?: string;
-}
-
-/**
- * Parameters for getSimilar EDGE endpoint.
- */
-export interface EdgeGetSimilarParams {
-    /** Article URL to find similar articles for (required) */
-    documentUrl: string;
-    /** Limit how many similar articles are returned */
-    maxRows?: number;
-    /** Limit search by ignoring articles older than specified days */
-    pastDays?: number;
-    /** List of publication IDs to filter results */
-    publicationIds?: string[];
-    /** Origin header for the request */
-    origin?: string;
-}
-
-/**
  * Allowed types for request parameter and data values.
  * - Primitives: string, number, boolean
  * - Arrays: string[] for repeated query parameters

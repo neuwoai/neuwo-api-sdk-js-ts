@@ -21,7 +21,6 @@ import {
 import {
     formatDate,
     parseJsonResponse,
-    prepareUrlListFile,
     RequestHandler,
     sanitiseContent,
     sleep,
@@ -92,40 +91,6 @@ describe("validateUrl", () => {
 
     test("should throw ValidationError for URL without protocol", () => {
         assert.throws(() => validateUrl("example.com"), ValidationError);
-    });
-});
-
-describe("prepareUrlListFile", () => {
-    test("should convert URL array to ArrayBuffer", () => {
-        const urls = ["https://example.com/1", "https://example.com/2"];
-        const result = prepareUrlListFile(urls);
-
-        assert.ok(result instanceof ArrayBuffer);
-
-        const text = new TextDecoder().decode(result);
-        assert.strictEqual(text, "https://example.com/1,https://example.com/2");
-    });
-
-    test("should throw ValidationError for empty array", () => {
-        assert.throws(() => prepareUrlListFile([]), ValidationError);
-    });
-
-    test("should throw ValidationError for non-array", () => {
-        assert.throws(() => prepareUrlListFile(null), ValidationError);
-        assert.throws(() => prepareUrlListFile("not-array"), ValidationError);
-    });
-
-    test("should throw ValidationError for invalid URL in array", () => {
-        const urls = ["https://example.com/1", "not-a-url"];
-        assert.throws(() => prepareUrlListFile(urls), ValidationError);
-    });
-
-    test("should handle single URL", () => {
-        const urls = ["https://example.com"];
-        const result = prepareUrlListFile(urls);
-
-        const text = new TextDecoder().decode(result);
-        assert.strictEqual(text, "https://example.com");
     });
 });
 

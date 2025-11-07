@@ -73,35 +73,6 @@ export async function parseJsonResponse(response: Response): Promise<unknown> {
 }
 
 /**
- * Prepare URL list file content for upload.
- * Converts array of URLs to comma-separated bytes.
- *
- * @param urls - Array of URL strings to convert
- * @returns ArrayBuffer containing comma-separated URLs
- * @throws {ValidationError} If URLs array is empty or contains invalid URLs
- */
-export function prepareUrlListFile(urls: string[]): ArrayBuffer {
-    if (!Array.isArray(urls) || urls.length === 0) {
-        throw new ValidationError("URLs must be a non-empty array");
-    }
-
-    // Validate all URLs
-    for (const url of urls) {
-        validateUrl(url);
-    }
-
-    // Join with commas and convert to bytes
-    const content = urls.join(",");
-    const encoder = new TextEncoder();
-    const uint8Array = encoder.encode(content);
-    // Return the underlying ArrayBuffer
-    return uint8Array.buffer.slice(
-        uint8Array.byteOffset,
-        uint8Array.byteOffset + uint8Array.byteLength
-    );
-}
-
-/**
  * Validate and sanitise content string.
  * Throws ValidationError if content is empty or only whitespace.
  *

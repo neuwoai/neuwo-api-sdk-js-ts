@@ -38,83 +38,9 @@ async function getAiTopicsRawExample() {
     }
 }
 
-async function getAiTopicsListRawExample() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 2: Get AI Topics for Multiple URLs (Raw Response)");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    const urls = [
-        "https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/",
-        "https://neuwo.ai/blog/2025/05/28/the-rise-of-made-for-advertising-mfa-publishers-how-they-impact-the-digital-ad-ecosystem/",
-    ];
-
-    try {
-        const response = await client.getAiTopicsListRaw({
-            urls: urls,
-            origin: "https://example.com",
-        });
-
-        console.log(`\nStatus: ${response.status}`);
-        console.log(`Headers:`);
-        response.headers.forEach((value, key) => {
-            console.log(`  ${key}: ${value}`);
-        });
-
-        // Get raw text
-        const text = await response.text();
-        console.log(`\nRaw response text (first 200 chars):`);
-        console.log(text.substring(0, 200));
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-}
-
-async function getSimilarRawExample() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 3: Get Similar Articles by URL (Raw Response)");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    try {
-        const response = await client.getSimilarRaw({
-            documentUrl:
-                "https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/",
-            maxRows: 5,
-            pastDays: 30,
-        });
-
-        console.log(`\nStatus: ${response.status}`);
-
-        // Clone response for multiple reads
-        const response1 = response.clone();
-        const response2 = response.clone();
-
-        // Read as JSON
-        const jsonData = await response1.json();
-        console.log(`JSON data:`, jsonData);
-
-        // Read as text
-        const textData = await response2.text();
-        console.log(`\nText length: ${textData.length} characters`);
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-}
-
 async function customResponseHandlingWithOrigin() {
     console.log("\n" + "=".repeat(60));
-    console.log("Example 4: Custom Response Handling with Origin Header");
+    console.log("Example 2: Custom Response Handling with Origin Header");
     console.log("=".repeat(60));
 
     const client = new NeuwoEdgeClient({
@@ -150,46 +76,9 @@ async function customResponseHandlingWithOrigin() {
     }
 }
 
-async function urlListFromBuffer() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 5: URL List from Buffer (Raw Response)");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    // Create a file buffer with URLs
-    const urlList = `https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/1
-https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/2
-https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/3`;
-    const fileContent = new TextEncoder().encode(urlList).buffer;
-
-    try {
-        const response = await client.getAiTopicsListRaw({
-            urls: fileContent,
-        });
-
-        console.log(`\nStatus: ${response.status}`);
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log(`Response contains ${data.length} results`);
-            console.log(JSON.stringify(data, null, 2));
-        } else {
-            const errorText = await response.text();
-            console.log(`Error response: ${errorText}`);
-        }
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-}
-
 async function inspectResponseMetadata() {
     console.log("\n" + "=".repeat(60));
-    console.log("Example 6: Inspect Response Metadata");
+    console.log("Example 3: Inspect Response Metadata");
     console.log("=".repeat(60));
 
     const client = new NeuwoEdgeClient({
@@ -242,10 +131,7 @@ async function main() {
         );
     } else {
         await getAiTopicsRawExample();
-        await getAiTopicsListRawExample();
-        await getSimilarRawExample();
         await customResponseHandlingWithOrigin();
-        await urlListFromBuffer();
         await inspectResponseMetadata();
 
         console.log("\n" + "=".repeat(60));

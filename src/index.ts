@@ -28,10 +28,8 @@ export { formatDate } from "./utils.js";
 
 // Export parameter interfaces
 export type {
-    EdgeGetAiTopicsListParams,
     EdgeGetAiTopicsParams,
     EdgeGetAiTopicsWaitParams,
-    EdgeGetSimilarParams,
     GetAiTopicsParams,
     GetSimilarParams,
     TrainAiTopicsParams,

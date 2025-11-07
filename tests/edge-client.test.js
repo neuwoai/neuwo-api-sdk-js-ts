@@ -580,49 +580,6 @@ describe("NeuwoEdgeClient", () => {
         });
     });
 
-    describe("getAiTopicsList", () => {
-        test("should validate URL array", async () => {
-            const client = new NeuwoEdgeClient({
-                token: "test-token",
-                baseUrl: "https://api.example.com",
-            });
-
-            await assert.rejects(
-                async () => client.getAiTopicsList({ urls: [] }),
-                ValidationError
-            );
-        });
-
-        test("should validate URLs in array", async () => {
-            const client = new NeuwoEdgeClient({
-                token: "test-token",
-                baseUrl: "https://api.example.com",
-            });
-
-            await assert.rejects(
-                async () =>
-                    client.getAiTopicsList({
-                        urls: ["https://example.com", "invalid-url"],
-                    }),
-                ValidationError
-            );
-        });
-    });
-
-    describe("getSimilar", () => {
-        test("should validate document URL", async () => {
-            const client = new NeuwoEdgeClient({
-                token: "test-token",
-                baseUrl: "https://api.example.com",
-            });
-
-            await assert.rejects(
-                async () => client.getSimilar({ documentUrl: "invalid-url" }),
-                ValidationError
-            );
-        });
-    });
-
     describe("parameter handling", () => {
         test("should accept origin override", () => {
             const _client = new NeuwoEdgeClient({

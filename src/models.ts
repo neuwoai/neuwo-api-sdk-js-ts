@@ -103,14 +103,6 @@ export interface ApiGetAiTopicsResponse {
     smart_tags?: ApiSmartTag[];
 }
 
-/**
- * API response item from GetAiTopicsList endpoint.
- * Can be either a successful response or an error response.
- */
-export type ApiGetAiTopicsListItem =
-    | ApiGetAiTopicsResponse
-    | { error: string; url: string };
-
 // ============================================================================
 // SDK Model Classes (exported - JavaScript conventions)
 // ============================================================================

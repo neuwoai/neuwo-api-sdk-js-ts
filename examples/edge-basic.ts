@@ -124,113 +124,9 @@ async function analyzeUrlWithWait() {
     }
 }
 
-async function analyzeMultipleUrls() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 3: Analyze Multiple URLs");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    const urls = [
-        "https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/",
-        "https://neuwo.ai/blog/2025/05/28/the-rise-of-made-for-advertising-mfa-publishers-how-they-impact-the-digital-ad-ecosystem/",
-    ];
-
-    try {
-        const results = await client.getAiTopicsList({ urls: urls });
-
-        console.log(`\nSuccessfully analyzed ${results.length} URLs`);
-        for (const result of results) {
-            console.log(
-                `  Tags: ${result.tags
-                    .slice(0, 3)
-                    .map((t) => t.value)
-                    .join(", ")}`
-            );
-        }
-    } catch (error) {
-        if (error instanceof ContentNotAvailableError) {
-            console.log(`Some URLs not available: ${error.message}`);
-        } else {
-            console.log(`Error: ${error}`);
-        }
-    }
-}
-
-async function analyzeMultipleUrlsFromFile() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 4: Analyze URLs from File Buffer");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    // Create a file buffer with URLs
-    const urlList = `https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/,
-https://neuwo.ai/blog/2025/05/28/the-rise-of-made-for-advertising-mfa-publishers-how-they-impact-the-digital-ad-ecosystem/`;
-    const fileContent = new TextEncoder().encode(urlList).buffer;
-
-    try {
-        const results = await client.getAiTopicsList({ urls: fileContent });
-
-        console.log(`\nSuccessfully analyzed ${results.length} URLs from file`);
-        for (const result of results) {
-            console.log(
-                `  • Tags: ${result.tags
-                    .slice(0, 3)
-                    .map((t) => t.value)
-                    .join(", ")}`
-            );
-        }
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-}
-
-async function findSimilarArticles() {
-    console.log("\n" + "=".repeat(60));
-    console.log("Example 5: Find Similar Articles by URL");
-    console.log("=".repeat(60));
-
-    const client = new NeuwoEdgeClient({
-        token: EDGE_TOKEN,
-        baseUrl: BASE_URL,
-        defaultOrigin: "https://example.com", // optional
-    });
-
-    const documentUrl =
-        "https://neuwo.ai/blog/2025/05/13/lets-break-the-rules-you-set-the-cpm/";
-
-    try {
-        const similarArticles = await client.getSimilar({
-            documentUrl: documentUrl,
-            maxRows: 5,
-            pastDays: 30,
-            publicationIds: ["pub-001"], // optional
-        });
-
-        console.log(`\nFound ${similarArticles.length} similar articles:`);
-        for (const article of similarArticles) {
-            console.log(
-                `  • ${article.headline} (similarity: ${article.score.toFixed(4)})`
-            );
-            console.log(`    URL: ${article.articleUrl}`);
-        }
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-}
-
 async function customOriginHeader() {
     console.log("\n" + "=".repeat(60));
-    console.log("Example 6: Using Custom Origin Header");
+    console.log("Example 3: Using Custom Origin Header");
     console.log("=".repeat(60));
 
     const client = new NeuwoEdgeClient({
@@ -281,9 +177,6 @@ async function main() {
     } else {
         await analyzeUrl();
         await analyzeUrlWithWait();
-        await analyzeMultipleUrls();
-        await analyzeMultipleUrlsFromFile();
-        await findSimilarArticles();
         await customOriginHeader();
 
         console.log("\n" + "=".repeat(60));
