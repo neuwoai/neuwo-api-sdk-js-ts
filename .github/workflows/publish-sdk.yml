@@ -1,0 +1,183 @@
+name: Publish JavaScript/TypeScript SDK
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_to_npm:
+        description: "Publish to npm"
+        required: false
+        type: boolean
+        default: true
+      publish_to_jsr:
+        description: "Publish to JSR"
+        required: false
+        type: boolean
+        default: true
+      create_release:
+        description: "Create GitHub Release"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  id-token: write # The OIDC ID token is used for authentication with JSR.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Extract version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+          echo "Package: $PACKAGE_NAME@$VERSION"
+
+      - name: Verify package integrity - npm pack
+        run: npm pack --dry-run
+
+      - name: Install verification tools
+        run: |
+          npm install -g @arethetypeswrong/cli publint
+
+      - name: Verify package integrity - are the types wrong
+        run: npx @arethetypeswrong/cli --pack
+
+      - name: Verify package integrity - publint
+        run: npx publint --strict
+
+      - name: Verify npm publish readiness (dry-run)
+        if: inputs.publish_to_npm == true
+        run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
+
+      - name: Verify JSR publish readiness (dry-run)
+        if: inputs.publish_to_jsr == true
+        run: npx jsr publish --dry-run
+
+      - name: Publish to npm
+        if: inputs.publish_to_npm == true
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISHING_TOKEN }}
+
+      - name: Publish to JSR
+        if: inputs.publish_to_jsr == true
+        run: npx jsr publish
+
+      - name: Create package tarball
+        if: inputs.create_release == true
+        run: npm pack
+
+      - name: Create GitHub Release
+        if: inputs.create_release == true
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          body: |
+            ## ${{ steps.version.outputs.package_name }} v${{ steps.version.outputs.version }}
+
+            ### Installation
+
+            **npm:**
+            ```bash
+            npm install ${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}
+            ```
+
+            **JSR:**
+            ```bash
+            npx jsr add @neuwo/${{ steps.version.outputs.package_name }}
+            ```
+
+            ### CDN Links
+
+            **unpkg:**
+            - https://unpkg.com/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/
+            - https://unpkg.com/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/dist/esm/index.js
+
+            **jsDelivr:**
+            - https://cdn.jsdelivr.net/npm/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/
+            - https://cdn.jsdelivr.net/npm/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/dist/esm/index.js
+
+            **esm.sh:**
+            - https://esm.sh/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}
+
+            ### Package Links
+
+            - npm: https://www.npmjs.com/package/${{ steps.version.outputs.package_name }}/v/${{ steps.version.outputs.version }}
+            - Repository: ${{ github.server_url }}/${{ github.repository }}
+
+            ### Details
+
+            - Commit: ${{ github.sha }}
+            - Build: ${{ github.run_id }}
+          files: |
+            *.tgz
+            dist/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate job summary
+        if: always()
+        run: |
+          echo "## Publishing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Package Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package:** \`${{ steps.version.outputs.package_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** \`${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Publishing Status" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ inputs.publish_to_npm }}" == "true" ]; then
+            echo "- npm: [Published](https://www.npmjs.com/package/${{ steps.version.outputs.package_name }}/v/${{ steps.version.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- npm: Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ inputs.publish_to_jsr }}" == "true" ]; then
+            echo "- JSR: [Published](https://jsr.io/@neuwo/${{ steps.version.outputs.package_name }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- JSR: Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ inputs.create_release }}" == "true" ]; then
+            echo "- GitHub Release: [Created](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- GitHub Release: Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### CDN Links" >> $GITHUB_STEP_SUMMARY
+          echo "- unpkg: [Browse](https://unpkg.com/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/)" >> $GITHUB_STEP_SUMMARY
+          echo "- jsDelivr: [Browse](https://cdn.jsdelivr.net/npm/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }}/)" >> $GITHUB_STEP_SUMMARY
+          echo "- esm.sh: [Load](https://esm.sh/${{ steps.version.outputs.package_name }}@${{ steps.version.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Workflow Run:** [\#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
