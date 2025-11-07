@@ -3,6 +3,11 @@
 JavaScript/TypeScript SDK client for the Neuwo content classification API.
 
 [![npm version](https://img.shields.io/npm/v/neuwo-api.svg)](https://www.npmjs.com/package/neuwo-api)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/neuwo-api)](https://bundlephobia.com/package/neuwo-api)
+[![JSR](https://jsr.io/badges/@neuwo/neuwo-api)](https://jsr.io/@neuwo/neuwo-api)
+[![JSR Score](https://jsr.io/badges/@neuwo/neuwo-api/score)](https://jsr.io/@neuwo/neuwo-api)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/node/v/neuwo-api.svg)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Support
