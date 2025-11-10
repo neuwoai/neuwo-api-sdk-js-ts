@@ -140,9 +140,4 @@ export interface RequestOptions {
     data?: Record<string, RequestValue>;
     /** HTTP headers to include in the request */
     headers?: Record<string, string>;
-    /** File attachments for multipart/form-data requests */
-    files?: Record<
-        string,
-        { filename: string; content: ArrayBuffer; contentType: string }
-    >;
 }

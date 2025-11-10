@@ -346,7 +346,7 @@ export class RequestHandler {
      * @throws {NeuwoAPIError} On API error responses
      */
     async request(options: RequestOptions): Promise<Response> {
-        const { method, endpoint, params, data, headers, files } = options;
+        const { method, endpoint, params, data, headers } = options;
 
         // Build full URL with query parameters and token
         const url = this.buildUrl(endpoint, params);
@@ -357,20 +357,9 @@ export class RequestHandler {
         };
 
         // Prepare request body
-        let body: string | FormData | undefined;
+        let body: string | undefined;
 
-        if (files) {
-            // Multipart form data for file uploads
-            const formData = new FormData();
-            for (const [key, file] of Object.entries(files)) {
-                const blob = new Blob([file.content], {
-                    type: file.contentType,
-                });
-                formData.append(key, blob, file.filename);
-            }
-            body = formData;
-            // Don't set Content-Type for FormData - browser will set it with boundary
-        } else if (data && method !== "GET") {
+        if (data && method !== "GET") {
             // Form URL encoded data
             requestHeaders["Content-Type"] =
                 "application/x-www-form-urlencoded";

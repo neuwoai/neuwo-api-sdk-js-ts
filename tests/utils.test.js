@@ -640,42 +640,6 @@ describe("RequestHandler", () => {
             }
         });
 
-        test("should send multipart form data for file uploads", async () => {
-            const handler = new RequestHandler(
-                "test-token",
-                "https://api.example.com",
-                10
-            );
-            let capturedBody = null;
-
-            const originalFetch = globalThis.fetch;
-            globalThis.fetch = async (url, options) => {
-                capturedBody = options.body;
-                return createMockResponse(200, '{"success":true}');
-            };
-
-            try {
-                const fileContent = new TextEncoder().encode(
-                    "test file content"
-                ).buffer;
-                await handler.request({
-                    method: "POST",
-                    endpoint: "/upload",
-                    files: {
-                        file: {
-                            filename: "test.txt",
-                            content: fileContent,
-                            contentType: "text/plain",
-                        },
-                    },
-                });
-
-                assert.ok(capturedBody instanceof FormData);
-            } finally {
-                globalThis.fetch = originalFetch;
-            }
-        });
-
         test("should include custom headers", async () => {
             const handler = new RequestHandler(
                 "test-token",
