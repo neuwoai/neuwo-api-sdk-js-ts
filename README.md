@@ -219,34 +219,6 @@ const response = await client.getAiTopicsWait({
 });
 ```
 
-##### Get AI Topics (Multiple URLs)
-
-```typescript
-// From array
-const results = await client.getAiTopicsList({
-  urls: ["https://example.com/1", "https://example.com/2"],
-  origin: "https://yoursite.com",
-});
-
-// From file buffer
-const fileBuffer = fs.readFileSync("urls.txt").buffer;
-const result = await client.getAiTopicsList({
-  urls: fileBuffer,
-});
-```
-
-##### Get Similar Articles
-
-```typescript
-const articles = await client.getSimilar({
-  documentUrl: "https://example.com/article", // Required
-  maxRows: 10, // Optional
-  pastDays: 30, // Optional
-  publicationIds: ["pub1", "pub2"], // Optional
-  origin: "https://yoursite.com", // Optional
-});
-```
-
 #### Raw Response Methods
 
 All methods have `*Raw` variants that return the raw `Response` object:
