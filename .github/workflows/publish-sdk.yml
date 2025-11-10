@@ -136,7 +136,6 @@ jobs:
             - Build: ${{ github.run_id }}
           files: |
             *.tgz
-            dist/**/*
           draft: false
           prerelease: false
           generate_release_notes: true
