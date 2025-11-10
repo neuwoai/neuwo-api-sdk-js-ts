@@ -46,6 +46,25 @@ For older browsers, you'll need to provide a fetch polyfill.
 
 For more detailed examples and use cases, see the [examples folder](examples/) in the repository.
 
+### Usage in Different Environments
+
+#### Node.js (ESM)
+```typescript
+import { NeuwoRestClient, NeuwoEdgeClient } from "neuwo-api";
+```
+
+#### Node.js (CommonJS)
+```typescript
+const { NeuwoRestClient, NeuwoEdgeClient } = require("neuwo-api");
+```
+
+#### Browser (ESM)
+```html
+<script type="module">
+  import { NeuwoEdgeClient } from "https://cdn.jsdelivr.net/npm/neuwo-api/+esm";
+</script>
+```
+
 ### REST API Client
 
 ```typescript
@@ -339,50 +358,6 @@ const response: GetAiTopicsResponse = await client.getAiTopics({
 response.tags.forEach((tag: Tag) => {
   console.log(`${tag.value}: ${tag.score}`);
 });
-```
-
-## Usage in Different Environments
-
-### Node.js (CommonJS)
-
-```typescript
-const { NeuwoEdgeClient } = require("neuwo-api");
-
-const client = new NeuwoEdgeClient({
-  token: "your-edge-token",
-  baseUrl: "https://api.example.com",
-  defaultOrigin: window.location.origin,
-});
-```
-
-### Node.js (ESM)
-
-```typescript
-import { NeuwoEdgeClient } from "neuwo-api";
-
-const client = new NeuwoEdgeClient({
-  token: "your-edge-token",
-  baseUrl: "https://api.example.com",
-  defaultOrigin: window.location.origin,
-});
-```
-
-### Browser (ESM)
-
-```html
-<script type="module">
-  import { NeuwoEdgeClient } from "https://cdn.jsdelivr.net/npm/neuwo-api/+esm";
-
-  const client = new NeuwoEdgeClient({
-    token: "your-edge-token",
-    baseUrl: "https://api.example.com",
-    defaultOrigin: window.location.origin,
-  });
-
-  const response = await client.getAiTopics({
-    url: "https://example.com/article",
-  });
-</script>
 ```
 
 ## Development
