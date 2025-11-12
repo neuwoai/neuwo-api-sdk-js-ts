@@ -57,13 +57,13 @@ interface ApiSmartTag {
     name: string;
 }
 
-interface ApiTrainingTag {
+export interface ApiTrainingTag {
     articleID: string;
     tag: string;
     addedDate: string;
 }
 
-interface ApiSimilarArticle {
+export interface ApiSimilarArticle {
     articleID: string;
     headline?: string;
     articleURL?: string;

@@ -9,6 +9,8 @@ import { logger } from "./logger.js";
 import {
     ApiArticle,
     ApiGetAiTopicsResponse,
+    ApiSimilarArticle,
+    ApiTrainingTag,
     Article,
     GetAiTopicsResponse,
     SimilarArticle,
@@ -146,10 +148,8 @@ export class NeuwoRestClient {
             ...params,
             format: "json",
         });
-        const data = await parseJsonResponse(response);
-        const result = GetAiTopicsResponse.fromApiResponse(
-            data as unknown as ApiGetAiTopicsResponse
-        );
+        const data = await parseJsonResponse<ApiGetAiTopicsResponse>(response);
+        const result = GetAiTopicsResponse.fromApiResponse(data);
 
         logger.info(
             `Retrieved ${result.tags.length} tags and ${result.smartTags.length} smart tags`
@@ -217,7 +217,7 @@ export class NeuwoRestClient {
             ...params,
             format: "json",
         });
-        const data = await parseJsonResponse(response);
+        const data = await parseJsonResponse<ApiSimilarArticle[]>(response);
 
         if (!Array.isArray(data)) {
             logger.warning(`Expected array response, got: ${typeof data}`);
@@ -311,8 +311,8 @@ export class NeuwoRestClient {
             ...params,
             format: "json",
         });
-        const data = await parseJsonResponse(response);
-        const article = Article.fromApiResponse(data as unknown as ApiArticle);
+        const data = await parseJsonResponse<ApiArticle>(response);
+        const article = Article.fromApiResponse(data);
 
         logger.info(`Successfully updated article: ${params.documentId}`);
 
@@ -380,7 +380,7 @@ export class NeuwoRestClient {
             ...params,
             format: "json",
         });
-        const data = await parseJsonResponse(response);
+        const data = await parseJsonResponse<ApiTrainingTag[]>(response);
 
         if (!Array.isArray(data)) {
             logger.warning(`Expected array response, got: ${typeof data}`);

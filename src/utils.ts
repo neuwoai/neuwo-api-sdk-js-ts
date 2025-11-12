@@ -49,7 +49,9 @@ export function validateUrl(url: string): void {
  * @throws {ContentNotAvailableError} If response contains an error field
  * @throws {Error} If response is not valid JSON
  */
-export async function parseJsonResponse(response: Response): Promise<unknown> {
+export async function parseJsonResponse<T = unknown>(
+    response: Response
+): Promise<T> {
     const text = await response.text();
 
     try {

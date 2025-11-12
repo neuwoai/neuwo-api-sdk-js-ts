@@ -127,10 +127,8 @@ export class NeuwoEdgeClient {
         params: EdgeGetAiTopicsParams
     ): Promise<GetAiTopicsResponse> {
         const response = await this.getAiTopicsRaw(params);
-        const data = await parseJsonResponse(response);
-        const result = GetAiTopicsResponse.fromApiResponse(
-            data as unknown as ApiGetAiTopicsResponse
-        );
+        const data = await parseJsonResponse<ApiGetAiTopicsResponse>(response);
+        const result = GetAiTopicsResponse.fromApiResponse(data);
 
         logger.info(
             `Retrieved ${result.tags.length} tags and ${result.smartTags.length} smart tags`
