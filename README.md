@@ -49,16 +49,19 @@ For more detailed examples and use cases, see the [examples folder](examples/) i
 ### Usage in Different Environments
 
 #### Node.js (ESM)
+
 ```typescript
 import { NeuwoRestClient, NeuwoEdgeClient } from "neuwo-api";
 ```
 
 #### Node.js (CommonJS)
+
 ```typescript
 const { NeuwoRestClient, NeuwoEdgeClient } = require("neuwo-api");
 ```
 
 #### Browser (ESM)
+
 ```html
 <script type="module">
   import { NeuwoEdgeClient } from "https://cdn.jsdelivr.net/npm/neuwo-api/+esm";
